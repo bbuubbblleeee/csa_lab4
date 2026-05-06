@@ -11,8 +11,6 @@ _start:
 useless:
     jmp useless
 
-
-
 process_trap:
     push_m INPUT_ADDR
     dup

@@ -1,48 +1,48 @@
 in_source: |
   %define OUTPUT_ADDR_SYMB 2046
-
+  
   .data
-      message: .pstr "Hello, World!"
-
+  message: .pstr "Hello, World!"
+  
   len:       .num 0
   ptr:       .num 0
-
+  
   .text
   _start:
       push_m message
       pop_m len
-
+  
       push message
       push 1
       add
       pop_m ptr
-
+  
   loop:
       push_m len
       jz end
-
+  
       push OUTPUT_ADDR_SYMB
       push_m ptr
       push_ind
       pop_ind
-
+  
       push_m ptr
       push 1
       add
       pop_m ptr
-
+  
       push_m len
       push 1
       sub
       pop_m len
-
+  
       jmp loop
-
+  
   end:
       halt
 machine_code: |
   START: 0016
-
+  
   0000 - 0000000D - DATA (13)
   0001 - 00000048 - DATA (72)
   0002 - 00000065 - DATA (101)
@@ -82,10 +82,7 @@ machine_code: |
   0037 - 1B000000 - HALT
   0038-2047 - 00000000 - 0
 
-output: |
-  Output: Hello, World!
-  Overall quantity of ticks: 434
-  Instructions executed: 204
+output: "Output: Hello, World!\nOverall quantity of ticks: 434\nInstructions executed: 204\n"
 out_log: |-
   Tick: 0000 | pc: 0010 | DS: [] | EI: 1 | carry: False | Instr: PUSH_M 0
   Tick: 0002 | pc: 0011 | DS: [13] | EI: 1 | carry: False | Instr: POP_M 14

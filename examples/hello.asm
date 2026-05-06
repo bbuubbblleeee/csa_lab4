@@ -1,7 +1,7 @@
 %define OUTPUT_ADDR_SYMB 2046
 
 .data
-    message: .pstr "Hello, World!"
+message: .pstr "Hello, World!"
 
 len:       .num 0
 ptr:       .num 0

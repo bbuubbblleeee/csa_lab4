@@ -244,8 +244,10 @@ class ControlUnit:
                 operand = instruction.operand
 
                 isr_tag = "[ISR] " if not self.ei else ""
-                instr_str = f"{opcode.name} {operand}" if opcode in _INSTRUCTIONS_WITH_OPERANDS \
-                    else opcode.name
+                instr_str = (
+                    f"{opcode.name} {operand}"
+                    if opcode in _INSTRUCTIONS_WITH_OPERANDS
+                    else opcode.name)
                 logger.debug(
                     f"{isr_tag}Tick: {self.tick:04d} | pc: {self.pc:04X}"
                     f" | DS: {format_stack(self.dp.data_stack)}"
@@ -254,7 +256,7 @@ class ControlUnit:
                 )
 
                 self.pc += 1
-                self.tick +=1
+                self.tick += 1
                 self.execute_instruction(opcode, operand)
 
         except Exception as e:
@@ -262,6 +264,8 @@ class ControlUnit:
 
         if self.dp.input_buffer:
             logger.warning(f"Input buffer not empty at halt: {self.dp.input_buffer}")
+
+
 def main(code_file: str, trap_schedule_filepath: str) -> None:
     prog_memory, start_address = BinaryManager.read_binary(code_file)
 

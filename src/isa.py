@@ -66,7 +66,6 @@ class Instruction:
 
 
 class BinaryManager:
-
     @staticmethod
     def write_binary(bin_filepath: str, memory: list[int], start_address: int) -> None:
         """Записывает дамп памяти в .bin и рядом кладёт текстовый дамп _dump.log."""
