@@ -115,7 +115,7 @@ end:
   | ...       | инструкции                       |
   | 2045      | MMIO: INPUT_ADDR                 | <- read
   | 2046      | MMIO: OUTPUT_ADDR_SYMB           | <- write (ASCII-вывод)
-  | 2047      | MMIO: OUTPUT_ADDR_DEС            | <- write (вывод числа)
+  | 2047      | MMIO: OUTPUT_ADDR_DEC            | <- write (вывод числа)
   +-----------+----------------------------------+
 ```
 
@@ -177,7 +177,7 @@ end:
 ### Набор инструкций
 
 Указаны такты на полный цикл: 1 (fetch) + такты execute.
-У`PUSH_IND`/`POP_IND` execute происходит за 2 такта из-за дополнительного обращения к памяти данных по косвенному адресу.
+У `PUSH_IND`/`POP_IND` execute происходит за 2 такта из-за дополнительного обращения к памяти данных по косвенному адресу.
 
 | Мнемоника | Опкод | Операнд | Действие                                        | Тактов |
 |---|---|---|-------------------------------------------------|---|
@@ -362,12 +362,12 @@ stdout: журнал тактов + итоговая строка "Output: …"
 $ python3 src/translator.py examples/hello.asm tmp/hello.bin
 
 $ python3 src/machine.py /tmp/hello.bin
- Tick: 0000 | pc: 0010 | DS: [] | EI: 1 | carry: False | Exec: PUSH_M 0
- Tick: 0001 | pc: 0011 | DS: [13] | EI: 1 | carry: False | Exec: POP_M 14
+Tick: 0000 | pc: 0010 | DS: [] | EI: 1 | carry: False | Instr: PUSH_M 0
+Tick: 0002 | pc: 0011 | DS: [13] | EI: 1 | carry: False | Instr: POP_M 14
  ...
-Output: 10 + 20 + 30 + 40 + 50 = 150
-Overall quantity of ticks: 248
-Instructions executed: 217
+Output: Hello, World!
+Overall quantity of ticks: 434
+Instructions executed: 204
 ```
 
 ### Golden-тесты
@@ -376,7 +376,7 @@ Instructions executed: 217
 
 ```
 pytest                           # обычный запуск
-pytest tests/ --update-golden    # перегенерировать эталоны
+pytest tests/ --update-goldens    # перегенерировать эталоны
 ```
 
 | Тест          | Алгоритм                                                                    |
@@ -387,7 +387,7 @@ pytest tests/ --update-golden    # перегенерировать эталон
 | `sort`        | Пузырьковая сортировка массива                                              |
 | `double_math` | 64-битная арифметика                                                        |
 | `prob2`       | Euler #6: разность квадрата суммы и суммы квадратов 1..100                  |
-| `array_sum`   | Сумма элементов массива                                                     |
+| `array_sum`   | Сумма элементов массива (демонстрация условной компиляции %ifdef)           |
 
 **Структура golden-файлов:**
 
