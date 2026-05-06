@@ -1,0 +1,107 @@
+in_source: |
+  %define INPUT_ADDR 2045
+  %define OUTPUT_ADDR_SYMB 2046
+  %define END_OF_INPUT 0
+
+  .text
+  .org 0x000
+  trap_vector:
+      jmp process_trap
+
+  _start:
+  useless:
+      jmp useless
+
+
+
+  process_trap:
+      push_m INPUT_ADDR
+      dup
+      push END_OF_INPUT
+      cmp
+      jz print_char      ; если stack.top == 0 (символ != END_OF_INPUT) -> прыгаем на печать
+
+      halt
+
+  print_char:
+      pop_m OUTPUT_ADDR_SYMB
+      iret
+in_stdin: "[(10, 'H'), (20, 'e'), (30, 'l'), (40, 'l'), (50, 'o'), (60, '\\0')]"
+machine_code: |
+  START: 0001
+
+  0000 - 14000002 - JMP 2
+  0001 - 14000001 - JMP 1
+  0002 - 020007FD - PUSH_M 2045
+  0003 - 07000000 - DUP
+  0004 - 01000000 - PUSH 0
+  0005 - 11000000 - CMP
+  0006 - 15000008 - JZ 8
+  0007 - 1B000000 - HALT
+  0008 - 050007FE - POP_M 2046
+  0009 - 1A000000 - IRET
+  0010-2047 - 00000000 - 0
+
+output: |
+  Output: Hello
+  Overall quantity of ticks: 104
+  Instructions executed: 52
+out_log: |-
+  Tick: 0000 | pc: 0001 | DS: [] | EI: 1 | carry: False | Instr: JMP 1
+  Tick: 0002 | pc: 0001 | DS: [] | EI: 1 | carry: False | Instr: JMP 1
+  Tick: 0004 | pc: 0001 | DS: [] | EI: 1 | carry: False | Instr: JMP 1
+  Tick: 0006 | pc: 0001 | DS: [] | EI: 1 | carry: False | Instr: JMP 1
+  Tick: 0008 | pc: 0001 | DS: [] | EI: 1 | carry: False | Instr: JMP 1
+  Tick: 0010 | INTERRUPT TRAP TRIGGERED | pc <- 0x000
+  [ISR] Tick: 0010 | pc: 0000 | DS: [] | EI: 0 | carry: False | Instr: JMP 2
+  [ISR] Tick: 0012 | pc: 0002 | DS: [] | EI: 0 | carry: False | Instr: PUSH_M 2045
+  [ISR] Tick: 0014 | pc: 0003 | DS: [72] | EI: 0 | carry: False | Instr: DUP
+  [ISR] Tick: 0016 | pc: 0004 | DS: [72, 72] | EI: 0 | carry: False | Instr: PUSH 0
+  [ISR] Tick: 0018 | pc: 0005 | DS: [72, 72, 0] | EI: 0 | carry: False | Instr: CMP
+  [ISR] Tick: 0020 | pc: 0006 | DS: [72, 0] | EI: 0 | carry: False | Instr: JZ 8
+  [ISR] Tick: 0022 | pc: 0008 | DS: [72] | EI: 0 | carry: False | Instr: POP_M 2046
+  [ISR] Tick: 0024 | pc: 0009 | DS: [] | EI: 0 | carry: False | Instr: IRET
+  Tick: 0026 | INTERRUPT TRAP TRIGGERED | pc <- 0x000
+  [ISR] Tick: 0026 | pc: 0000 | DS: [] | EI: 0 | carry: False | Instr: JMP 2
+  [ISR] Tick: 0028 | pc: 0002 | DS: [] | EI: 0 | carry: False | Instr: PUSH_M 2045
+  [ISR] Tick: 0030 | pc: 0003 | DS: [101] | EI: 0 | carry: False | Instr: DUP
+  [ISR] Tick: 0032 | pc: 0004 | DS: [101, 101] | EI: 0 | carry: False | Instr: PUSH 0
+  [ISR] Tick: 0034 | pc: 0005 | DS: [101, 101, 0] | EI: 0 | carry: False | Instr: CMP
+  [ISR] Tick: 0036 | pc: 0006 | DS: [101, 0] | EI: 0 | carry: False | Instr: JZ 8
+  [ISR] Tick: 0038 | pc: 0008 | DS: [101] | EI: 0 | carry: False | Instr: POP_M 2046
+  [ISR] Tick: 0040 | pc: 0009 | DS: [] | EI: 0 | carry: False | Instr: IRET
+  Tick: 0042 | INTERRUPT TRAP TRIGGERED | pc <- 0x000
+  [ISR] Tick: 0042 | pc: 0000 | DS: [] | EI: 0 | carry: False | Instr: JMP 2
+  [ISR] Tick: 0044 | pc: 0002 | DS: [] | EI: 0 | carry: False | Instr: PUSH_M 2045
+  [ISR] Tick: 0046 | pc: 0003 | DS: [108] | EI: 0 | carry: False | Instr: DUP
+  [ISR] Tick: 0048 | pc: 0004 | DS: [108, 108] | EI: 0 | carry: False | Instr: PUSH 0
+  [ISR] Tick: 0050 | pc: 0005 | DS: [108, 108, 0] | EI: 0 | carry: False | Instr: CMP
+  [ISR] Tick: 0052 | pc: 0006 | DS: [108, 0] | EI: 0 | carry: False | Instr: JZ 8
+  [ISR] Tick: 0054 | pc: 0008 | DS: [108] | EI: 0 | carry: False | Instr: POP_M 2046
+  [ISR] Tick: 0056 | pc: 0009 | DS: [] | EI: 0 | carry: False | Instr: IRET
+  Tick: 0058 | INTERRUPT TRAP TRIGGERED | pc <- 0x000
+  [ISR] Tick: 0058 | pc: 0000 | DS: [] | EI: 0 | carry: False | Instr: JMP 2
+  [ISR] Tick: 0060 | pc: 0002 | DS: [] | EI: 0 | carry: False | Instr: PUSH_M 2045
+  [ISR] Tick: 0062 | pc: 0003 | DS: [108] | EI: 0 | carry: False | Instr: DUP
+  [ISR] Tick: 0064 | pc: 0004 | DS: [108, 108] | EI: 0 | carry: False | Instr: PUSH 0
+  [ISR] Tick: 0066 | pc: 0005 | DS: [108, 108, 0] | EI: 0 | carry: False | Instr: CMP
+  [ISR] Tick: 0068 | pc: 0006 | DS: [108, 0] | EI: 0 | carry: False | Instr: JZ 8
+  [ISR] Tick: 0070 | pc: 0008 | DS: [108] | EI: 0 | carry: False | Instr: POP_M 2046
+  [ISR] Tick: 0072 | pc: 0009 | DS: [] | EI: 0 | carry: False | Instr: IRET
+  Tick: 0074 | INTERRUPT TRAP TRIGGERED | pc <- 0x000
+  [ISR] Tick: 0074 | pc: 0000 | DS: [] | EI: 0 | carry: False | Instr: JMP 2
+  [ISR] Tick: 0076 | pc: 0002 | DS: [] | EI: 0 | carry: False | Instr: PUSH_M 2045
+  [ISR] Tick: 0078 | pc: 0003 | DS: [111] | EI: 0 | carry: False | Instr: DUP
+  [ISR] Tick: 0080 | pc: 0004 | DS: [111, 111] | EI: 0 | carry: False | Instr: PUSH 0
+  [ISR] Tick: 0082 | pc: 0005 | DS: [111, 111, 0] | EI: 0 | carry: False | Instr: CMP
+  [ISR] Tick: 0084 | pc: 0006 | DS: [111, 0] | EI: 0 | carry: False | Instr: JZ 8
+  [ISR] Tick: 0086 | pc: 0008 | DS: [111] | EI: 0 | carry: False | Instr: POP_M 2046
+  [ISR] Tick: 0088 | pc: 0009 | DS: [] | EI: 0 | carry: False | Instr: IRET
+  Tick: 0090 | INTERRUPT TRAP TRIGGERED | pc <- 0x000
+  [ISR] Tick: 0090 | pc: 0000 | DS: [] | EI: 0 | carry: False | Instr: JMP 2
+  [ISR] Tick: 0092 | pc: 0002 | DS: [] | EI: 0 | carry: False | Instr: PUSH_M 2045
+  [ISR] Tick: 0094 | pc: 0003 | DS: [0] | EI: 0 | carry: False | Instr: DUP
+  [ISR] Tick: 0096 | pc: 0004 | DS: [0, 0] | EI: 0 | carry: False | Instr: PUSH 0
+  [ISR] Tick: 0098 | pc: 0005 | DS: [0, 0, 0] | EI: 0 | carry: False | Instr: CMP
+  [ISR] Tick: 0100 | pc: 0006 | DS: [0, 1] | EI: 0 | carry: False | Instr: JZ 8
+  [ISR] Tick: 0102 | pc: 0007 | DS: [0] | EI: 0 | carry: False | Instr: HALT

@@ -1,0 +1,10 @@
+.DS_Store
+.idea/
+*.iml
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.mypy_cache/
+.ruff_cache/
+binAndLog/*.bin
