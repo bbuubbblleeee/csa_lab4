@@ -103,11 +103,11 @@ def translate(source_code: str) -> tuple[list[int], int]:
                                      f"at pc={addr}") from None
 
         try:
-            opcode = Opcode[opcode]
+            opcode_obj = Opcode[opcode]
         except KeyError:
             raise ValueError(f"Unknown instruction: '{opcode}' at pc={addr}") from None
 
-        memory[addr] = Instruction(opcode, operand_val).encode()
+        memory[addr] = Instruction(opcode_obj, operand_val).encode()
 
     if "_start" not in labels:
         raise ValueError("Start label '_start' is missed!")
@@ -115,7 +115,7 @@ def translate(source_code: str) -> tuple[list[int], int]:
     return memory, labels["_start"]
 
 
-def main(source_file: str, target_file: str):
+def main(source_file: str, target_file: str) -> None:
     with open(source_file, encoding="utf-8") as f:
         source_code = f.read()
 

@@ -127,7 +127,8 @@ class DataPath:
 
 
 class ControlUnit:
-    def __init__(self, data_path: DataPath, start_address: int, trap_schedule: list):
+    def __init__(self, data_path: DataPath, start_address: int,
+                 trap_schedule: list[tuple[int, str]]):
         self.dp = data_path
         self.pc = start_address
         self.tick = 0
@@ -264,7 +265,7 @@ class ControlUnit:
 def main(code_file: str, trap_schedule_filepath: str) -> None:
     prog_memory, start_address = BinaryManager.read_binary(code_file)
 
-    trap_schedule: list = []
+    trap_schedule: list[tuple[int, str]] = []
     if trap_schedule_filepath:
         try:
             with open(trap_schedule_filepath, encoding="utf-8") as f:
