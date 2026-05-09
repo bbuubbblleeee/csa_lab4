@@ -8,6 +8,7 @@ from isa import _INSTRUCTIONS_WITH_OPERANDS, BinaryManager, Instruction, Opcode
 logger = logging.getLogger("machine")
 
 _DS_DISPLAY_MAX = 8
+_MAX_TICKS = 1_000_000
 _MASK32 = 0xFFFFFFFF
 
 
@@ -283,6 +284,9 @@ class ControlUnit:
     def run(self) -> None:
         try:
             while not self.halted:
+                if self.ticks > _MAX_TICKS:
+                    logger.error(f"Simulation stopped: NUMBER OF TICKS > ({_MAX_TICKS})")
+                    break
                 self.check_interrupt()
 
                 opcode, operand = self.fetch()

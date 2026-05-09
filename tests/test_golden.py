@@ -11,6 +11,15 @@ import pytest
 import machine
 import translator
 
+_LOG_MAX = 102400
+
+
+def truncate_log(log: str) -> str:
+    if len(log) <= _LOG_MAX:
+        return log
+    log = log[:_LOG_MAX]
+    return log if log.endswith("\n") else log[:log.rfind("\n")]
+
 
 @pytest.mark.golden_test("golden/*.yml")
 def test_translator_and_machine(golden, caplog):
@@ -36,7 +45,7 @@ def test_translator_and_machine(golden, caplog):
         with open(target_hex_path, encoding="utf-8") as f:
             machine_code = f.read()
 
-    clean_logs = "\n".join(record.getMessage() for record in caplog.records)
+    clean_logs = truncate_log("\n".join(record.getMessage() for record in caplog.records))
     assert golden.out["machine_code"] == machine_code
     assert golden.out["output"] == stdout.getvalue()
     assert golden.out["out_log"] == clean_logs
